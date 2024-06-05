@@ -21,8 +21,8 @@ function useGames(gameQuery: GameQuery) {
       apiClient.getAll({
         params: {
           page: pageParam,
-          genres: gameQuery.genre?.id,
-          parent_platforms: gameQuery.platform?.id,
+          genres: gameQuery.genreId,
+          parent_platforms: gameQuery.platformId,
           ordering: gameQuery.sortOrder,
           search: gameQuery.searchQuery,
         },
