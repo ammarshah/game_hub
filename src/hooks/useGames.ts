@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ms from "ms";
-import { GameQuery } from "../App";
 import { Platform } from "./usePlatforms";
 import APIClient from "../services/api-client";
+import useGameQueryStore from "../gameQueryStore";
 
 const apiClient = new APIClient<Game>("/games");
 
@@ -15,17 +15,19 @@ export interface Game {
   rating_top: number;
 }
 
-function useGames(gameQuery: GameQuery) {
+function useGames() {
+  const { genreId, platformId, sortOrder, searchQuery } = useGameQueryStore();
+
   return useInfiniteQuery({
-    queryKey: ["games", gameQuery],
+    queryKey: ["games", { genreId, platformId, sortOrder, searchQuery }],
     queryFn: ({ pageParam }) =>
       apiClient.getAll({
         params: {
           page: pageParam,
-          genres: gameQuery.genreId,
-          parent_platforms: gameQuery.platformId,
-          ordering: gameQuery.sortOrder,
-          search: gameQuery.searchQuery,
+          genres: genreId,
+          parent_platforms: platformId,
+          ordering: sortOrder,
+          search: searchQuery,
         },
       }),
     initialPageParam: 1,
